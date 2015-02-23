@@ -46,24 +46,26 @@ class AllRestaurantsAPI(Resource):
 class RestaurantsWithNameAPI(Resource):
 
     def get(self, restaurant_name):
-        restaurantsWithName = []
-        for key in restaurants:
-            if restaurants[key]["BusinessName"] == restaurant_name:
-                restaurantsWithName.append(restaurants[key])
-        return restaurantsWithName
+        if not restaurants:
+            abort(404, message="No Restaurants")
+        return [restaurants[key]["BusinessName"] 
+                for key in restaurants
+                if restaurant_name.lower() in restaurants[key]["BusinessName"].lower()] 
 
 class RestaurantsWithZipAPI(Resource):
 
     def get(self, restaurant_zip):
-        restaurantsWithZip = []
-        for key in restaurants:
-            if restaurants[key]["ZIP"] == restaurant_zip:
-                restaurantsWithZip.append(restaurants[key])
-        return restaurantsWithZip
+        if not restaurants:
+            abort(404, message="No Restaurants")
+        return [restaurants[key]["ZIP"]
+                for key in restaurants
+                if restaurant_zip == restaurants[key]["ZIP"]]
 
 class RestaurantsWithIdAPI(Resource):
 
     def get(self, restaurant_id):
+        if not restaurants:
+            abort(404, message="No Restaurants")
         if restaurant_id not in restaurants:
             abort(404, message="Restaurant {} doesn't exist".format(restaurant_id))
         return restaurants[restaurant_id]
@@ -71,6 +73,8 @@ class RestaurantsWithIdAPI(Resource):
 class ViolationsAPI(Resource):
 
     def get(self, restaurant_id):
+        if not restaurants:
+            abort(404, message="No Restaurants")
         if restaurant_id not in restaurants:
             abort(404, message="Restaurant {} doesn't exist".format(restaurant_id))
         return restaurants[restaurant_id]["violations"]
@@ -78,6 +82,8 @@ class ViolationsAPI(Resource):
 class ViolationsWithIdAPI(Resource):
 
     def get(self, restaurant_id, violation_id):
+        if not restaurants:
+            abort(404, message="No Restaurants")
         if violation_id not in restaurants[restaurant_id]["violations"]:
             abort(404, message="Resturant {}, Violation {} doesn't exist".format(restaurant_id, violation_id))    
         return restaurants[restaurant_id]["violations"][violation_id]
