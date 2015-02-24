@@ -48,7 +48,7 @@ class RestaurantsWithNameAPI(Resource):
     def get(self, restaurant_name):
         if not restaurants:
             abort(404, message="No Restaurants")
-        return [restaurants[key]["BusinessName"] 
+        return [restaurants[key] 
                 for key in restaurants
                 if restaurant_name.lower() in restaurants[key]["BusinessName"].lower()] 
 
@@ -57,7 +57,7 @@ class RestaurantsWithZipAPI(Resource):
     def get(self, restaurant_zip):
         if not restaurants:
             abort(404, message="No Restaurants")
-        return [restaurants[key]["ZIP"]
+        return [restaurants[key]
                 for key in restaurants
                 if restaurant_zip == restaurants[key]["ZIP"]]
 
